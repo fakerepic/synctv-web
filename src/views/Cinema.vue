@@ -8,6 +8,7 @@ import { ElNotification, ElMessage } from "element-plus";
 import router from "@/router";
 import { useMovieApi } from "@/hooks/useMovie";
 import artplayerPluginDanmuku from "artplayer-plugin-danmuku";
+import artplayerPluginASS from "@/plugins/artplayer-plugin-ass"
 import { strLengthLimit, blobToUint8Array } from "@/utils";
 import { ElementMessage, ElementMessageType, type MovieStatus } from "@/proto/message";
 import type { options } from "@/components/Player.vue";
@@ -126,7 +127,12 @@ const playerOption = computed<options>(() => {
       : `${option.url}?token=${roomToken.value}`;
   }
   if (room.currentMovie.base!.subtitles) {
-    option.plugins!.push(newLazyInitSubtitlePlugin(room.currentMovie.base!.subtitles));
+    // option.plugins!.push(newLazyInitSubtitlePlugin(room.currentMovie.base!.subtitles));
+    if (room.currentMovie.base!.subtitles['ass']) {
+      option.plugins!.push(artplayerPluginASS({
+        subUrl: room.currentMovie.base!.subtitles['ass'].url
+      }));
+    }
   }
 
   return option;
